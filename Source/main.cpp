@@ -19,14 +19,8 @@ struct Circle {
 	Position position;
 	Color circle_color;
 
-	Circle() : circle_color(white) {}
-
-	Circle create_circle() {
-		Circle new_circle;
-		new_circle.position.x = static_cast<float>(get_mouse_x());
-		new_circle.position.y = static_cast<float>(get_mouse_y());
-		return new_circle;
-	}
+	Circle(float x = 0, float y = 0, Color color = white)
+		: position{ x, y }, circle_color(color) {}
 
 	Color random_color() {
 		Color color;
@@ -35,10 +29,6 @@ struct Circle {
 		color.b = static_cast<unsigned char>(random_int_in_range(0, 255));
 		color.a = static_cast<unsigned char>(random_int_in_range(0, 255));
 		return color;
-	}
-
-	void change_color() {
-		circle_color = random_color();
 	}
 
 };
@@ -67,18 +57,16 @@ void update() {
 	}
 
 	if (is_button_pressed(Button::Right) && CIRCLE_SPAWNED < 12) {
-		Circle new_circle = Circle().create_circle();
+		Circle new_circle(static_cast<float>(get_mouse_x()), static_cast<float>(get_mouse_y()));
 		circles.push_back(new_circle);
 		CIRCLE_SPAWNED++;
 	}
-
 }
 
 void render() {
 	for (const Circle& circle : circles) {
 		draw_circle(round_to_int(circle.position.x), round_to_int(circle.position.y), CIRCLE_RADIUS, circle.circle_color);
 	}
-
 }
 
 int main()
